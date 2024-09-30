@@ -98,7 +98,7 @@ typedef struct {
     size_t length;
     size_t capacity;
     char *items;
-} UtilsStringBuilder;
+} DawnStringBuilder;
 
 #define DAWN_SB_FREE(sb) free((sb).items)
 
@@ -140,7 +140,7 @@ char *dawn_shift_args(int *argc, char ***argv);
  * @return Whether the process was successful.
  *      When a failure occurs, an error message is printed to stderr.
  */
-bool dawn_read_entire_file(const char *filepath, UtilsStringBuilder *content);
+bool dawn_read_entire_file(const char *filepath, DawnStringBuilder *content);
 
 /**
  * Write the content to the given file.
@@ -150,7 +150,7 @@ bool dawn_read_entire_file(const char *filepath, UtilsStringBuilder *content);
  * @return Whether the process was successful.
  *      When a failure occurs, an error message is printed to stderr.
  */
-bool dawn_write_entire_file(const char *filepath, const UtilsStringBuilder *content);
+bool dawn_write_entire_file(const char *filepath, const DawnStringBuilder *content);
 
 #endif // DAWN_H_
 
@@ -164,7 +164,7 @@ char *dawn_shift_args(int *argc, char ***argv) {
     return arg;
 }
 
-bool dawn_read_entire_file(const char *filepath, UtilsStringBuilder *content) {
+bool dawn_read_entire_file(const char *filepath, DawnStringBuilder *content) {
     if (!filepath || !content) return 0;
 
     bool result;
@@ -175,35 +175,35 @@ bool dawn_read_entire_file(const char *filepath, UtilsStringBuilder *content) {
     f = fopen(filepath, "r");
     if (!f) {
         fprintf(stderr, "Failed to open file: %s\n", filepath);
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     if (fseek(f, 0, SEEK_END)) {
         perror("Failed to get to the end of file");
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     long f_size = ftell(f);
     if (f_size < 0) {
         perror("Failed to get the size of the file");
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     if (fseek(f, 0, SEEK_SET)) {
         perror("Failed to get to the start of file");
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     buf = malloc(f_size);
     if (!buf) {
         fprintf(stderr, "Failed to allocate memory for content from %s\n", filepath);
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     size_t read_size = fread(buf, 1, f_size, f);
-    if (read_size < f_size && ferror(f)) {
+    if (read_size < (size_t)f_size && ferror(f)) {
         fprintf(stderr, "There was an error while reading %s\n", filepath);
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     DAWN_SB_APPEND_BUF(content, buf, f_size);
@@ -215,7 +215,7 @@ defer:
     return result;
 }
 
-bool dawn_write_entire_file(const char *filepath, const UtilsStringBuilder *content) {
+bool dawn_write_entire_file(const char *filepath, const DawnStringBuilder *content) {
     if (!filepath || !content) return false;
 
     bool result;
@@ -223,13 +223,13 @@ bool dawn_write_entire_file(const char *filepath, const UtilsStringBuilder *cont
     FILE *f = fopen(filepath, "w+");
     if (!f) {
         perror("Failed to open file!");
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     size_t size = fwrite(content->items, 1, content->length, f);
     if (size < content->length) {
         fprintf(stderr, "ERROR: There was an error when writing content to %s\n", filepath);
-        DEFER_RETURN(false);
+        DAWN_DEFER_RETURN(false);
     }
 
     result = true;

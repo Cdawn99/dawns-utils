@@ -28,9 +28,9 @@
 #include <string.h>
 
 #define DAWN_DEFER_RETURN(ret_val) \
-    do {                      \
-        result = (ret_val);   \
-        goto defer;           \
+    do {                           \
+        result = (ret_val);        \
+        goto defer;                \
     } while (0)
 
 /***************
@@ -41,12 +41,12 @@
 
 #define DAWN_DA_DEFAULT_CAPACITY 16
 
-#define DAWN_DA_APPEND(da, elem)                                                    \
+#define DAWN_DA_APPEND(da, elem)                                                     \
     do {                                                                             \
         if ((da)->length == (da)->capacity) {                                        \
             (da)->capacity *= 2;                                                     \
             if ((da)->capacity == 0) {                                               \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                          \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                           \
             }                                                                        \
             void *temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
             assert(temp && "Not enough RAM for realloc");                            \
@@ -55,11 +55,11 @@
         (da)->items[(da)->length++] = (elem);                                        \
     } while (0)
 
-#define DAWN_DA_APPEND_MANY(da, elems, elems_count)                                  \
+#define DAWN_DA_APPEND_MANY(da, elems, elems_count)                                   \
     do {                                                                              \
         if ((da)->length + elems_count >= (da)->capacity) {                           \
             if ((da)->capacity == 0) {                                                \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                           \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                            \
             }                                                                         \
             while ((da)->length + elems_count >= (da)->capacity) {                    \
                 (da)->capacity *= 2;                                                  \
@@ -72,12 +72,12 @@
         (da)->length += elems_count;                                                  \
     } while (0)
 
-#define DAWN_DA_PREPEND(da, elem)                                                   \
+#define DAWN_DA_PREPEND(da, elem)                                                    \
     do {                                                                             \
         if ((da)->length == (da)->capacity) {                                        \
             (da)->capacity *= 2;                                                     \
             if ((da)->capacity == 0) {                                               \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                          \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                           \
             }                                                                        \
             void *temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
             assert(temp && "Not enough RAM for realloc");                            \
@@ -103,9 +103,9 @@ typedef struct {
 #define DAWN_SB_FREE(sb) free((sb).items)
 
 #define DAWN_SB_APPEND_CSTR(sb, cstr)    \
-    do {                                  \
-        const char *s = (cstr);           \
-        size_t len = strlen(s);           \
+    do {                                 \
+        const char *s = (cstr);          \
+        size_t len = strlen(s);          \
         DAWN_DA_APPEND_MANY(sb, s, len); \
     } while (0)
 

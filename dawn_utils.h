@@ -41,53 +41,53 @@
 
 #define DAWN_DA_DEFAULT_CAPACITY 16
 
-#define DAWN_DA_APPEND(da, elem)                                                     \
-    do {                                                                             \
-        if ((da)->length == (da)->capacity) {                                        \
-            (da)->capacity *= 2;                                                     \
-            if ((da)->capacity == 0) {                                               \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                           \
-            }                                                                        \
-            void *temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
-            assert(temp && "Not enough RAM for realloc");                            \
-            (da)->items = temp;                                                      \
-        }                                                                            \
-        (da)->items[(da)->length++] = (elem);                                        \
+#define DAWN_DA_APPEND(da, elem)                                                          \
+    do {                                                                                  \
+        if ((da)->length == (da)->capacity) {                                             \
+            (da)->capacity *= 2;                                                          \
+            if ((da)->capacity == 0) {                                                    \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                                \
+            }                                                                             \
+            void *dawn_temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
+            assert(dawn_temp && "Not enough RAM for realloc");                            \
+            (da)->items = dawn_temp;                                                      \
+        }                                                                                 \
+        (da)->items[(da)->length++] = (elem);                                             \
     } while (0)
 
-#define DAWN_DA_APPEND_MANY(da, elems, elems_count)                                   \
-    do {                                                                              \
-        if ((da)->length + elems_count >= (da)->capacity) {                           \
-            if ((da)->capacity == 0) {                                                \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                            \
-            }                                                                         \
-            while ((da)->length + elems_count >= (da)->capacity) {                    \
-                (da)->capacity *= 2;                                                  \
-            }                                                                         \
-            void *temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items);  \
-            assert(temp && "Not enough RAM for realloc");                             \
-            (da)->items = temp;                                                       \
-        }                                                                             \
-        memcpy((da)->items + (da)->length, elems, elems_count * sizeof *(da)->items); \
-        (da)->length += elems_count;                                                  \
+#define DAWN_DA_APPEND_MANY(da, elems, elems_count)                                        \
+    do {                                                                                   \
+        if ((da)->length + elems_count >= (da)->capacity) {                                \
+            if ((da)->capacity == 0) {                                                     \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                                 \
+            }                                                                              \
+            while ((da)->length + elems_count >= (da)->capacity) {                         \
+                (da)->capacity *= 2;                                                       \
+            }                                                                              \
+            void *dawn_temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items);  \
+            assert(dawn_temp && "Not enough RAM for realloc");                             \
+            (da)->items = dawn_temp;                                                       \
+        }                                                                                  \
+        memcpy((da)->items + (da)->length, elems, elems_count * sizeof *(da)->items);      \
+        (da)->length += elems_count;                                                       \
     } while (0)
 
-#define DAWN_DA_PREPEND(da, elem)                                                    \
-    do {                                                                             \
-        if ((da)->length == (da)->capacity) {                                        \
-            (da)->capacity *= 2;                                                     \
-            if ((da)->capacity == 0) {                                               \
-                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                           \
-            }                                                                        \
-            void *temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
-            assert(temp && "Not enough RAM for realloc");                            \
-            (da)->items = temp;                                                      \
-        }                                                                            \
-        for (size_t i = (da)->length; i > 0; i--) {                                  \
-            (da)->items[i] = (da)->items[i-1];                                       \
-        }                                                                            \
-        (da)->items[0] = (elem);                                                     \
-        (da)->length++;                                                              \
+#define DAWN_DA_PREPEND(da, elem)                                                         \
+    do {                                                                                  \
+        if ((da)->length == (da)->capacity) {                                             \
+            (da)->capacity *= 2;                                                          \
+            if ((da)->capacity == 0) {                                                    \
+                (da)->capacity = DAWN_DA_DEFAULT_CAPACITY;                                \
+            }                                                                             \
+            void *dawn_temp = realloc((da)->items, (da)->capacity * sizeof *(da)->items); \
+            assert(dawn_temp && "Not enough RAM for realloc");                            \
+            (da)->items = dawn_temp;                                                      \
+        }                                                                                 \
+        for (size_t i = (da)->length; i > 0; i--) {                                       \
+            (da)->items[i] = (da)->items[i-1];                                            \
+        }                                                                                 \
+        (da)->items[0] = (elem);                                                          \
+        (da)->length++;                                                                   \
     } while (0)
 
 /****************
